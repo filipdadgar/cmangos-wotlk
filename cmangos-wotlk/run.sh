@@ -1,0 +1,2 @@
+#/bin/bash
+docker run -d -p8085:8085 -p3724:3724 -e SERVERIP=192.168.1.212 -v /media/download/kubeconfig/mangos-wotlk/dbc:/cmangos/bin/dbc -v /media/download/kubeconfig/mangos-wotlk/maps:/cmangos/bin/maps -v /media/download/kubeconfig/mangos-wotlk/mmaps:/cmangos/bin/mmaps -v /media/download/kubeconfig/mangos-wotlk/vmaps:/cmangos/bin/vmaps -v /media/download/kubeconfig/mangos-wotlk/config/:/cmangos/etc/ filipdadgar/mangos-wotlk
