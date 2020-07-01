@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mangos-mysql
+  namespace: wotlk
+spec:
+  selector:
+    matchLabels:
+      app: mangos-mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mangos-mysql
+    spec:
+      containers:
+      - name: mangos-mysql
+        image: filipdadgar/mangos-wotlkdb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: mangos
+        ports:
+        - name: mysql
+          containerPort: 3306
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 20
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mangos-mysql-mysql-data
+          subPath: mysql
+      restartPolicy: Always
+      volumes:
+      - name: mangos-mysql-mysql-data
+        hostPath: 
+          path: /media/download/kubeconfig/mangos-wotlk/

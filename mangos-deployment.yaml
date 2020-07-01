@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mangos-wotlk-deployment
+  namespace: wotlk
+  labels:
+    app: mangos-wotlk-server
+spec:
+  selector:
+    matchLabels:
+      app: mangos-wotlk-server
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mangos-wotlk-server
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_HOSTNAME
+          value: mangos-mysql
+        - name: MYSQL_APP_PASSWORD
+          value: mangos
+        - name: MYSQL_APP_USER
+          value: mangos
+        - name: SERVERIP
+          value: mangos-mysql
+        - name: STARTLEVEL
+          value: "80"
+        - name: MONEY
+          value: "100000000"
+        - name: SKIPCIN
+          value: "1"
+        image: filipdadgar/mangos-wotlk
+        name: mangos-wotlk-deployment
+        ports:
+        - containerPort: 8085
+        - containerPort: 3724
+        resources: {}
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /var/log/wow
+          name: wow-vanilla-log-data
+        - mountPath: /cmangos/etc/
+          name: config
+        - mountPath: /cmangos/bin/dbc
+          name: wow-vanilla-server-dbc
+        - mountPath: /cmangos/bin/maps
+          name: wow-vanilla-server-maps
+        - mountPath: /cmangos/bin/mmaps
+          name: wow-vanilla-server-mmaps
+        - mountPath: /cmangos/bin/vmaps
+          name: wow-vanilla-server-vmaps
+        - mountPath: /etc/ahbot.conf
+          name: ahbot
+      restartPolicy: Always
+      volumes:
+      - name: wow-vanilla-log-data
+        hostPath: 
+          path: /media/download/kubeconfig/mangos-wotlk/log
+      - name: config
+        hostPath:
+          path: /media/download/kubeconfig/mangos-wotlk/config/
+      - name: wow-vanilla-server-dbc
+        hostPath:
+          path: /media/download/kubeconfig/mangos-wotlk/dbc
+      - name: wow-vanilla-server-maps
+        hostPath:
+          path: /media/download/kubeconfig/mangos-wotlk/maps
+      - name: wow-vanilla-server-mmaps
+        hostPath: 
+          path: /media/download/kubeconfig/mangos-wotlk/mmaps
+      - name: wow-vanilla-server-vmaps
+        hostPath:
+          path: /media/download/kubeconfig/mangos-wotlk/vmaps
+      - name: ahbot
+        hostPath:
+          path: /media/download/kubeconfig/mangos-wotlk/config/ahbot.conf
+status: {}
+

@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: wotlk
+  name: mangos-wotlk-server
+spec:
+  selector:
+    app: mangos-wotlk-server
+  ports:
+  - name: "8085"
+    port: 8085
+    targetPort: 8085
+  - name: "3724"
+    port: 3724
+    targetPort: 3724
+  - name: "3725"
+    port: 3725
+    targetPort: 3725
+  type: LoadBalancer
