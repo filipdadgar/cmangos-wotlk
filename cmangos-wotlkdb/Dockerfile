@@ -5,7 +5,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
 	git \
 	wget \
 	gzip \
-	bash
+	bash \
+	debianutils
 
 RUN git clone https://github.com/cmangos/wotlk-db.git
 RUN git clone https://github.com/cmangos/mangos-wotlk.git
