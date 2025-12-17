@@ -65,6 +65,7 @@ ENV MONEY=1000000
 ENV SKIPCIN=1
 
 ADD start.sh /cmangos/run/
+RUN chmod +x /cmangos/run/start.sh
 
 WORKDIR cmangos/bin
 EXPOSE 8085 3724

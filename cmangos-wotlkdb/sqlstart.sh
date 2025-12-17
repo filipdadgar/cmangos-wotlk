@@ -1,9 +1,8 @@
 #!/bin/bash
+set -e
 
 mysql_app_user="root"
 mysql_app_password="mangos"
-database_hostname="localhost"
-database_port="3306"
 
 function prepare_database {
 
@@ -13,18 +12,18 @@ echo "$(date) [INFO]: Creating databases"
 
  
 echo "creating db"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" -h "${database_hostname}" -P3306 < /cmangos/sql/db_create_mysql.sql
+mysql -u"${mysql_app_user}" -p"${mysql_app_password}" < /cmangos/sql/db_create_mysql.sql
 echo "done creating db"
 
 echo "mangos.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" -h "${database_hostname}" -P3306 wotlkmangos < /cmangos/sql/mangos.sql
+mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkmangos < /cmangos/sql/mangos.sql
 echo "done mangos.sql"
 
 echo "characters.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" -h "${database_hostname}" -P3306 wotlkcharacters < /cmangos/sql/characters.sql
+mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkcharacters < /cmangos/sql/characters.sql
 echo "done characters"
 echo "realmd.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" -h "${database_hostname}" -P3306 wotlkrealmd < /cmangos/sql/realmd.sql 
+mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkrealmd < /cmangos/sql/realmd.sql 
 echo "done realm"
 
 
