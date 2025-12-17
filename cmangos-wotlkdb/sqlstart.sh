@@ -12,18 +12,18 @@ echo "$(date) [INFO]: Creating databases"
 
  
 echo "creating db"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" < /cmangos/sql/db_create_mysql.sql
+mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" < /cmangos/sql/db_create_mysql.sql
 echo "done creating db"
 
 echo "mangos.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkmangos < /cmangos/sql/mangos.sql
+mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkmangos < /cmangos/sql/mangos.sql
 echo "done mangos.sql"
 
 echo "characters.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkcharacters < /cmangos/sql/characters.sql
+mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkcharacters < /cmangos/sql/characters.sql
 echo "done characters"
 echo "realmd.sql"
-mysql -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkrealmd < /cmangos/sql/realmd.sql 
+mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkrealmd < /cmangos/sql/realmd.sql 
 echo "done realm"
 
 
