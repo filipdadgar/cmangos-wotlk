@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:20.04 AS builder
 RUN apt-get update -y && apt-get upgrade -y
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
@@ -37,7 +37,7 @@ RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
 RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
 RUN mv run/etc/playerbot.conf.dist run/etc/playerbot.conf
 
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 RUN apt-get update && apt-get upgrade -y 
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
@@ -65,4 +65,3 @@ EXPOSE 8085 3724
 
 
 CMD ["/cmangos/run/start.sh"]
-

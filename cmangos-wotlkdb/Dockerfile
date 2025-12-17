@@ -37,4 +37,4 @@ VOLUME /var/lib/mysql
 ADD my.cnf /etc/mysql/
 
 EXPOSE 3306
-CMD ["mysqld", "--max-allowed-packet=32505856"]
+CMD ["mariadbd", "--max-allowed-packet=32505856"]
