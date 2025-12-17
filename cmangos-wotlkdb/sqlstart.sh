@@ -31,7 +31,7 @@ echo "executing fulldb.sh"
 
 echo "----"
 
-cd /wotlk-db && ./InstallFullDB.sh
+cd /wotlk-db && ./InstallFullDB.sh -InstallAll root mangos DeleteAll
 
 #mysql -u"${mysql_app_user}" -p"${mysql_app_password}" -h "${database_hostname}" -P3306 wotlkmangos < /cmangos/sql/WoTLKDB_1_3_14015.sql
 
