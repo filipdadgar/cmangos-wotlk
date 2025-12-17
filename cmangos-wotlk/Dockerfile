@@ -13,8 +13,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
 	zlib1g-dev \
 	libcurl4-openssl-dev \
 	libboost-all-dev \
-	libmariadb-dev-compat \
-	libmariadb-dev \
+	libmysqlclient-dev \
+	libbz2-dev \
 	ccache \
 	wget
 
