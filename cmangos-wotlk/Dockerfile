@@ -13,7 +13,9 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
 	zlib1g-dev \
 	libcurl4-openssl-dev \
 	libboost-all-dev \
-	libmysqlclient-dev \
+	libmariadbclient-dev \
+	libreadline-dev \
+	libncurses-dev \
 	libbz2-dev \
 	ccache \
 	wget
@@ -23,7 +25,6 @@ RUN ln -s /usr/bin/ccache /usr/local/bin/gcc \
 	&& ln -s /usr/bin/ccache /usr/local/bin/cc \
         && ln -s /usr/bin/ccache /usr/local/bin/c++
 
-RUN export ACE_ROOT=/usr/include/ace && export TBB_ROOT_DIR=/usr/include/tbb
 WORKDIR /cmangos
 RUN mkdir build run
 RUN git clone https://github.com/cmangos/mangos-wotlk.git mangos

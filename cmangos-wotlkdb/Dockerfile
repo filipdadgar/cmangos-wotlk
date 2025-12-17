@@ -31,7 +31,6 @@ RUN chmod -R 777 /wotlk-db/
 
 ADD sqlstart.sh /docker-entrypoint-initdb.d
 
-USER mysql
 VOLUME /var/lib/mysql
 
 ADD my.cnf /etc/mysql/
