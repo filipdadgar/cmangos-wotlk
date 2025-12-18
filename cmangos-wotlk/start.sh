@@ -134,15 +134,50 @@ if [ ! -x "$REALMD_BIN" ]; then
     exit 1
 fi
 
-if command -v screen >/dev/null 2>&1; then
-    echo "Launching mangosd in screen session 'mangos'"
-    # remove any stale session with same name (do not fail if none)
-    screen -S mangos -X quit >/dev/null 2>&1 || true
-    # start detached session that runs mangosd and redirects logs
-    screen -S mangos -dm bash -c "exec \"$MANGOSD_BIN\" -c \"$CONFDIR/mangosd.conf\" > /var/log/wow/mangosd.log 2>&1"
+# Prefer run-* wrapper scripts if present (they handle restarts and screens)
+RUN_MANGOS_SCRIPT="$BINDIR/run-mangosd"
+RUN_REALM_SCRIPT="$BINDIR/run-realmd"
+
+# Ensure run scripts are executable and owned by the mangos user when possible
+for s in "$RUN_MANGOS_SCRIPT" "$RUN_REALM_SCRIPT"; do
+    if [ -f "$s" ]; then
+        if [ ! -x "$s" ]; then
+            chmod +x "$s" 2>/dev/null || true
+        fi
+        if command -v id >/dev/null 2>&1 && [ "$(id -u)" = "0" ]; then
+            chown mangos:mangos "$s" 2>/dev/null || true
+        fi
+    fi
+done
+
+started_foreground="no"
+
+if [ -x "$RUN_MANGOS_SCRIPT" ]; then
+    echo "Starting mangos via $RUN_MANGOS_SCRIPT"
+    "$RUN_MANGOS_SCRIPT" start || echo "Warning: $RUN_MANGOS_SCRIPT returned non-zero"
 else
-    echo "screen not found, starting mangosd in background instead"
-    "$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+    if command -v screen >/dev/null 2>&1; then
+        echo "Launching mangosd in screen session 'mangos'"
+        screen -S mangos -X quit >/dev/null 2>&1 || true
+        screen -S mangos -dm bash -c "exec \"$MANGOSD_BIN\" -c \"$CONFDIR/mangosd.conf\" > /var/log/wow/mangosd.log 2>&1"
+    else
+        echo "screen not found, starting mangosd in background instead"
+        "$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+    fi
 fi
 
-exec "$REALMD_BIN" -c "$CONFDIR/realmd.conf"
+if [ -x "$RUN_REALM_SCRIPT" ]; then
+    echo "Starting realmd via $RUN_REALM_SCRIPT"
+    "$RUN_REALM_SCRIPT" start || echo "Warning: $RUN_REALM_SCRIPT returned non-zero"
+    # run-realmd detaches into screen; no foreground process to exec — keep container alive by tailing logs
+    started_foreground="no"
+else
+    echo "Starting realmd in foreground"
+    exec "$REALMD_BIN" -c "$CONFDIR/realmd.conf"
+    started_foreground="yes"
+fi
+
+# If we reach here, no foreground process was exec'd (both run-* detached). Tail logs to keep container alive
+echo "No foreground process started; tailing logs to keep container running"
+touch /var/log/wow/mangosd.log /var/log/wow/realmd.log
+tail -F /var/log/wow/mangosd.log /var/log/wow/realmd.log
