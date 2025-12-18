@@ -175,10 +175,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && dpkg-reconfigure --frontend noninteractive tzdata \
  \
  && apt-get install -y --no-install-recommends \
-		gosu \
-		libmariadb-dev \
-		libssl3 \
-		wait-for-it \
+	 gosu \
+	 screen \
+	 libmariadb-dev \
+	 libssl3 \
+	 wait-for-it \
  \
  && rm -rf /tmp/*
 

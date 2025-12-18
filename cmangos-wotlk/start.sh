@@ -87,7 +87,10 @@ echo "Starting mangosd and realmd..."
 # Ensure log directory exists
 mkdir -p /var/log/wow
 
-# Start mangosd in background and exec realmd in foreground using absolute paths
+# Start mangosd inside a named screen session so operators can attach:
+#   screen -ls
+#   screen -r mangos
+# We start mangosd detached in session 'mangos' and keep realmd in foreground.
 MANGOSD_BIN="$BINDIR/mangosd"
 REALMD_BIN="$BINDIR/realmd"
 
@@ -102,5 +105,15 @@ if [ ! -x "$REALMD_BIN" ]; then
     exit 1
 fi
 
-"$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+if command -v screen >/dev/null 2>&1; then
+    echo "Launching mangosd in screen session 'mangos'"
+    # remove any stale session with same name (do not fail if none)
+    screen -S mangos -X quit >/dev/null 2>&1 || true
+    # start detached session that runs mangosd and redirects logs
+    screen -S mangos -dm bash -c "exec \"$MANGOSD_BIN\" -c \"$CONFDIR/mangosd.conf\" > /var/log/wow/mangosd.log 2>&1"
+else
+    echo "screen not found, starting mangosd in background instead"
+    "$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+fi
+
 exec "$REALMD_BIN" -c "$CONFDIR/realmd.conf"
