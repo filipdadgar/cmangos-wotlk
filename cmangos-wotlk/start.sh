@@ -163,6 +163,19 @@ start_with_screen_loop() {
     fi
 }
 
+# If DEBUG_MANGOS=1, run mangosd in foreground (useful to see startup errors in kubectl logs)
+if [ "${DEBUG_MANGOS:-0}" = "1" ]; then
+    echo "DEBUG mode: starting realmd detached and mangosd in foreground"
+    if command -v screen >/dev/null 2>&1; then
+        screen -S run-realmd -X quit >/dev/null 2>&1 || true
+        screen -S run-realmd -dm bash -lc "exec \"$REALMD_BIN\" -c \"$CONFDIR/realmd.conf\" >> /var/log/wow/realmd.log 2>&1"
+    else
+        "$REALMD_BIN" -c "$CONFDIR/realmd.conf" >> /var/log/wow/realmd.log 2>&1 &
+    fi
+    echo "Starting mangosd in foreground (DEBUG)"
+    exec "$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf"
+fi
+
 # Start mangosd and realmd using loops which will survive crashes and restart
 start_with_screen_loop "$MANGOSD_BIN" "$CONFDIR/mangosd.conf" /var/log/wow/mangosd.log run-mangosd
 start_with_screen_loop "$REALMD_BIN" "$CONFDIR/realmd.conf" /var/log/wow/realmd.log run-realmd
