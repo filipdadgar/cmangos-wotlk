@@ -57,5 +57,10 @@ if [ -n "$SKIPCIN" ]; then
 fi
 
 echo "Starting mangosd and realmd..."
-bash -c "screen -dmS mangos ./mangosd -c /cmangos/etc/mangosd.conf" && \
-    ./realmd -c /cmangos/etc/realmd.conf
+# Ensure log directory exists
+mkdir -p /var/log/wow
+
+# Change to binary dir and start mangosd in background, then exec realmd in foreground
+cd "$BINDIR" || true
+./mangosd -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+exec ./realmd -c "$CONFDIR/realmd.conf"

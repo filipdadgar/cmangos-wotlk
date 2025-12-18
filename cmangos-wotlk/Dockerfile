@@ -102,6 +102,10 @@ RUN mkdir -p "${HOME_DIR}/build" \
  && chmod +x ExtractResources.sh \
 			 MoveMapGen.sh
 
+# copy helper start script into installed run dir
+COPY start.sh "${HOME_DIR}/run/start.sh"
+RUN chmod +x "${HOME_DIR}/run/start.sh" || true
+
 RUN useradd --comment "MaNGOS" \
 			--home "${HOME_DIR}" \
 			--user-group mangos
@@ -126,7 +130,7 @@ COPY builder/InstallFullDB.config "${DATABASE_DIR}/"
 RUN chmod +x /entrypoint.sh || true
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash"]
+CMD ["/opt/mangos/start.sh"]
 
 ENV VOLUME_DIR="/home/mangos/data"
 ENV TMPDIR="${VOLUME_DIR}/tmp"
