@@ -1,7 +1,34 @@
 #!/bin/bash
 
-BINDIR=/cmangos/bin
-CONFDIR=/cmangos/etc
+# Try to detect installation layout used in the image or mounts.
+# Prefer /opt/mangos, fall back to /cmangos, then to relative ./bin ./etc
+if [ -n "${BINDIR:-}" ] && [ -d "$BINDIR" ]; then
+    true
+else
+    if [ -d /opt/mangos/bin ]; then
+        BINDIR=/opt/mangos/bin
+    elif [ -d /cmangos/bin ]; then
+        BINDIR=/cmangos/bin
+    elif [ -d ./bin ]; then
+        BINDIR=./bin
+    else
+        BINDIR="/opt/mangos/bin"
+    fi
+fi
+
+if [ -n "${CONFDIR:-}" ] && [ -d "$CONFDIR" ]; then
+    true
+else
+    if [ -d /opt/mangos/etc ]; then
+        CONFDIR=/opt/mangos/etc
+    elif [ -d /cmangos/etc ]; then
+        CONFDIR=/cmangos/etc
+    elif [ -d ./etc ]; then
+        CONFDIR=./etc
+    else
+        CONFDIR="/opt/mangos/etc"
+    fi
+fi
 
 # Default values if env vars are not set
 DB_HOST=${DATABASE_HOSTNAME:-"localhost"}
@@ -10,9 +37,9 @@ DB_USER=${MYSQL_APP_USER:-"mangos"}
 DB_PASS=${MYSQL_APP_PASSWORD:-"mangos"}
 SERVER_IP=${SERVERIP:-"127.0.0.1"}
 
-if [ -f $CONFDIR/ahbot.conf ]; then
-  echo "$CONFDIR/ahbot.conf is being used"
-  AHCONFIG="-a $CONFDIR/ahbot.conf"
+if [ -f "$CONFDIR/ahbot.conf" ]; then
+    echo "$CONFDIR/ahbot.conf is being used"
+    AHCONFIG="-a $CONFDIR/ahbot.conf"
 fi
 
 echo "Configuring Mangos..."
@@ -60,7 +87,20 @@ echo "Starting mangosd and realmd..."
 # Ensure log directory exists
 mkdir -p /var/log/wow
 
-# Change to binary dir and start mangosd in background, then exec realmd in foreground
-cd "$BINDIR" || true
-./mangosd -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
-exec ./realmd -c "$CONFDIR/realmd.conf"
+# Start mangosd in background and exec realmd in foreground using absolute paths
+MANGOSD_BIN="$BINDIR/mangosd"
+REALMD_BIN="$BINDIR/realmd"
+
+if [ ! -x "$MANGOSD_BIN" ]; then
+    echo "ERROR: mangosd not found or not executable at $MANGOSD_BIN"
+    ls -l "$BINDIR" || true
+    exit 1
+fi
+if [ ! -x "$REALMD_BIN" ]; then
+    echo "ERROR: realmd not found or not executable at $REALMD_BIN"
+    ls -l "$BINDIR" || true
+    exit 1
+fi
+
+"$MANGOSD_BIN" -c "$CONFDIR/mangosd.conf" > /var/log/wow/mangosd.log 2>&1 &
+exec "$REALMD_BIN" -c "$CONFDIR/realmd.conf"
