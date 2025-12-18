@@ -211,7 +211,7 @@ ENV MANGOS_LOGS_DBNAME="${EXPANSION}logs"
 ENV MANGOS_REALMD_DBNAME="${EXPANSION}realmd"
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash"]
+CMD ["/opt/mangos/start.sh"]
 
 EXPOSE 3443 3724 7878 8085 8086
 VOLUME ["${VOLUME_DIR}"]
