@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS wotlkrealmd DEFAULT CHARSET utf8 COLLATE utf8_gene
 CREATE DATABASE IF NOT EXISTS wotlkcharacters DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS wotlkmangos DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS logs DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS wotlklogs DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS realmd DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
 -- User is created by Docker ENV, but we ensure permissions here
@@ -16,12 +17,14 @@ GRANT ALL PRIVILEGES ON wotlkrealmd.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON wotlkcharacters.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON wotlkmangos.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON logs.* TO 'mangos'@'%';
+GRANT ALL PRIVILEGES ON wotlklogs.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON realmd.* TO 'mangos'@'%';
 
 GRANT ALL PRIVILEGES ON wotlkrealmd.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON wotlkcharacters.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON wotlkmangos.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON logs.* TO 'mangos'@'localhost';
+GRANT ALL PRIVILEGES ON wotlklogs.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON realmd.* TO 'mangos'@'localhost';
 
 FLUSH PRIVILEGES;
