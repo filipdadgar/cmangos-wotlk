@@ -11,6 +11,13 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
 RUN git clone https://github.com/cmangos/wotlk-db.git
 RUN git clone https://github.com/cmangos/mangos-wotlk.git
 
+# Try to download the Full DB archive expected by InstallFullDB.sh.
+# First try the specific file; if it's not available, fall back to the releases
+# tarball containing backups and extract into /wotlk-db/Full_DB.
+RUN mkdir -p /wotlk-db/Full_DB \
+ && wget -O /wotlk-db/Full_DB/WoTLKDB_1_9_14092.sql.gz https://github.com/cmangos/wotlk-db/raw/master/Full_DB/WoTLKDB_1_9_14092.sql.gz || \
+	(wget -qO- https://github.com/cmangos/wotlk-db/releases/download/latest/wotlk-all-backups.tar.gz | tar -xz -C /wotlk-db/Full_DB --strip-components=0 || true)
+
 ENV MYSQL_ROOT_PASSWORD mangos
 ENV MYSQL_USER mangos
 ENV MYSQL_PASSWORD mangos
@@ -31,6 +38,8 @@ ADD InstallFullDB.config /wotlk-db/InstallFullDB.config
 RUN chmod -R 777 /wotlk-db/
 
 ADD sqlstart.sh /docker-entrypoint-initdb.d
+RUN chmod +x /docker-entrypoint-initdb.d/sqlstart.sh || true
+RUN if [ -f /wotlk-db/InstallFullDB.sh ]; then chmod +x /wotlk-db/InstallFullDB.sh || true; fi
 
 VOLUME /var/lib/mysql
 

@@ -14,17 +14,8 @@ echo "$(date) [INFO]: Creating databases"
 echo "creating db"
 mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" < /cmangos/sql/db_create_mysql.sql
 echo "done creating db"
+echo "NOTE: Skipping individual base SQL imports; InstallFullDB.sh will import full DB"
 
-echo "mangos.sql"
-mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkmangos < /cmangos/sql/mangos.sql
-echo "done mangos.sql"
-
-echo "characters.sql"
-mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkcharacters < /cmangos/sql/characters.sql
-echo "done characters"
-echo "realmd.sql"
-mariadb -u"${mysql_app_user}" -p"${mysql_app_password}" wotlkrealmd < /cmangos/sql/realmd.sql 
-echo "done realm"
 
 
 echo "executing fulldb.sh"
