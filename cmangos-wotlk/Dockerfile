@@ -180,6 +180,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	 libmariadb-dev \
 	 libssl3 \
 	 wait-for-it \
+	 tini \
  \
  && rm -rf /tmp/*
 
@@ -212,6 +213,7 @@ ENV MANGOS_LOGS_DBNAME="${EXPANSION}logs"
 ENV MANGOS_REALMD_DBNAME="${EXPANSION}realmd"
 
 ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini","--","/entrypoint.sh"]
 CMD ["/opt/mangos/start.sh"]
 
 EXPOSE 3443 3724 7878 8085 8086

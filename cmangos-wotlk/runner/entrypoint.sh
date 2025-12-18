@@ -56,6 +56,16 @@ if [ -d "/opt/mangos" ]; then
   cd /opt/mangos || true
 fi
 
+# Ensure run-* wrapper scripts in bin are executable and owned by mangos (we're still root)
+if [ -d "/opt/mangos/bin" ]; then
+  for f in /opt/mangos/bin/run-*; do
+    if [ -f "$f" ]; then
+      chmod +x "$f" 2>/dev/null || true
+      chown mangos:mangos "$f" 2>/dev/null || true
+    fi
+  done
+fi
+
 # Run as mangos user if possible
 if command -v gosu >/dev/null 2>&1; then
   exec gosu mangos "$@"
