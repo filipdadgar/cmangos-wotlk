@@ -37,7 +37,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  \
  && rm -rf /tmp/*
 
-ARG EXPANSION
+ARG EXPANSION="wotlk"
 ARG MANGOS_SHA1="latest"
 ARG DATABASE_SHA1="latest"
 ENV HOME_DIR="/home/mangos"
@@ -48,6 +48,7 @@ RUN mkdir -p "${MANGOS_DIR}" \
 			 "${DATABASE_DIR}" \
  \
  && cd /tmp \
+ && export GIT_TERMINAL_PROMPT=0 && git config --global credential.helper "" || true \
  && if [ "${MANGOS_SHA1}" = "latest" ]; \
 	then \
 		git clone "https://github.com/cmangos/mangos-${EXPANSION}.git" \
