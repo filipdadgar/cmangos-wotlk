@@ -72,6 +72,8 @@ WORKDIR "${MANGOS_DIR}"
 ARG EXPANSION
 COPY --from=builder /cmangos/run "${MANGOS_DIR}"
 COPY runner/entrypoint.sh /
+# Ensure entrypoint is executable (permissions may be lost when copying from context)
+RUN chmod +x /entrypoint.sh || true
 
 ENV VOLUME_DIR="/var/lib/mangos"
 ENV TMPDIR="${VOLUME_DIR}/tmp"			
