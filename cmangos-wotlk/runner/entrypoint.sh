@@ -126,7 +126,7 @@ if [ "$#" -gt 0 ]; then
   case "$1" in
     mangosd)
       shift
-      wait_for_database || exit 1
+#      wait_for_database || exit 1
       run_mangosd "$@"
       ;;
     realmd)
