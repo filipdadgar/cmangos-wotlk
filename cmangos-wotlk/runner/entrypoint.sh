@@ -131,7 +131,7 @@ if [ "$#" -gt 0 ]; then
       ;;
     realmd)
       shift
-      wait_for_database || exit 1
+#      wait_for_database || exit 1
       run_realmd "$@"
       ;;
     *)
