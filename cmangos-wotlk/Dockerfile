@@ -49,7 +49,6 @@ RUN make install
 WORKDIR /cmangos
 RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
 RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
-RUN mv run/etc/playerbot.conf.dist run/etc/playerbot.conf
 
 FROM ubuntu:20.04
 RUN apt-get update && apt-get upgrade -y 
