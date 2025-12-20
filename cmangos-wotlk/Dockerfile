@@ -50,7 +50,7 @@ WORKDIR /cmangos
 #RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
 #RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
 
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 RUN apt-get update && apt-get upgrade -y 
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
