@@ -47,8 +47,8 @@ RUN cmake -DDEBUG=0 -DBUILD_EXTRACTORS=ON -DBUILD_PLAYERBOT=ON -DCMAKE_INSTALL_P
 RUN make -j`nproc`
 RUN make install
 WORKDIR /cmangos
-RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
-RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
+#RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
+#RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
 
 FROM ubuntu:20.04
 RUN apt-get update && apt-get upgrade -y 
@@ -83,7 +83,7 @@ RUN mkdir -p "${VOLUME_DIR}" \
 	&& chown -R mangos:mangos "${VOLUME_DIR}" \
 	&& chown -R mangos:mangos "${MANGOS_DIR}"
 
-ENV MANGOS_DBHOST="host.docker.internal"
+ENV MANGOS_DBHOST="mangos-mysql.dadgar.se"
 ENV MANGOS_DBPORT="3306"
 ENV MANGOS_DBUSER="mangos"
 ENV MANGOS_DBPASS=""
