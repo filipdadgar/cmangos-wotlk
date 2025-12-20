@@ -56,17 +56,17 @@ replace_db_line() {
   fi
 }
 
-# Apply to mangosd.conf
-if [ -f "$CONFIG_DIR/mangosd.conf" ]; then
-  replace_db_line "$CONFIG_DIR/mangosd.conf" "LoginDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_REALMD_DBNAME:-realmd}"
-  replace_db_line "$CONFIG_DIR/mangosd.conf" "WorldDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_WORLD_DBNAME:-wotlkmangos}"
-  replace_db_line "$CONFIG_DIR/mangosd.conf" "CharacterDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_CHARACTERS_DBNAME:-wotlkcharacters}"
-fi
+# # Apply to mangosd.conf
+# if [ -f "$CONFIG_DIR/mangosd.conf" ]; then
+#   replace_db_line "$CONFIG_DIR/mangosd.conf" "LoginDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_REALMD_DBNAME:-realmd}"
+#   replace_db_line "$CONFIG_DIR/mangosd.conf" "WorldDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_WORLD_DBNAME:-wotlkmangos}"
+#   replace_db_line "$CONFIG_DIR/mangosd.conf" "CharacterDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_CHARACTERS_DBNAME:-wotlkcharacters}"
+# fi
 
-# Apply to realmd.conf
-if [ -f "$CONFIG_DIR/realmd.conf" ]; then
-  replace_db_line "$CONFIG_DIR/realmd.conf" "LoginDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_REALMD_DBNAME:-realmd}"
-fi
+# # Apply to realmd.conf
+# if [ -f "$CONFIG_DIR/realmd.conf" ]; then
+#   replace_db_line "$CONFIG_DIR/realmd.conf" "LoginDatabaseInfo" "${DB_HOST};${DB_PORT};${DB_USER};${DB_PASS};${MANGOS_REALMD_DBNAME:-realmd}"
+# fi
 
 # Change into working dir if present
 if [ -d "/opt/mangos" ]; then
@@ -83,24 +83,24 @@ if [ -d "/opt/mangos/bin" ]; then
   done
 fi
 
-# Wait for DB helper (pure bash using /dev/tcp)
-wait_for_database() {
-  local host="${DB_HOST}" port="${DB_PORT}" timeout="${DB_WAIT_TIMEOUT:-60}"
-  local start
-  start=$(date +%s)
-  echo "Waiting for database ${host}:${port} (timeout ${timeout}s)..."
-  while true; do
-    if bash -c "cat < /dev/tcp/${host}/${port}" >/dev/null 2>&1; then
-      echo "Database ${host}:${port} is reachable"
-      break
-    fi
-    if [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
-      echo "Timeout while waiting for database ${host}:${port}" >&2
-      return 1
-    fi
-    sleep 1
-  done
-}
+# # Wait for DB helper (pure bash using /dev/tcp)
+# wait_for_database() {
+#   local host="${DB_HOST}" port="${DB_PORT}" timeout="${DB_WAIT_TIMEOUT:-60}"
+#   local start
+#   start=$(date +%s)
+#   echo "Waiting for database ${host}:${port} (timeout ${timeout}s)..."
+#   while true; do
+#     if bash -c "cat < /dev/tcp/${host}/${port}" >/dev/null 2>&1; then
+#       echo "Database ${host}:${port} is reachable"
+#       break
+#     fi
+#     if [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
+#       echo "Timeout while waiting for database ${host}:${port}" >&2
+#       return 1
+#     fi
+#     sleep 1
+#   done
+# }
 
 # Service runners
 run_mangosd() {

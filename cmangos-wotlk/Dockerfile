@@ -86,7 +86,7 @@ RUN mkdir -p "${VOLUME_DIR}" \
 ENV MANGOS_DBHOST="mangos-mysql.dadgar.se"
 ENV MANGOS_DBPORT="3306"
 ENV MANGOS_DBUSER="mangos"
-ENV MANGOS_DBPASS=""
+ENV MANGOS_DBPASS="mangos"
 
 ENV MANGOS_WORLD_DBNAME="wotlkmangos"
 ENV MANGOS_CHARACTERS_DBNAME="wotlkcharacters"
