@@ -47,8 +47,8 @@ RUN cmake -DDEBUG=0 -DBUILD_EXTRACTORS=ON -DBUILD_PLAYERBOT=ON -DCMAKE_INSTALL_P
 RUN make -j`nproc`
 RUN make install
 WORKDIR /cmangos
-#RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf
-#RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf
+RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf || true
+RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf || true
 
 FROM ubuntu:24.04
 RUN apt-get update && apt-get upgrade -y 

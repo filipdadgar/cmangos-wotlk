@@ -42,6 +42,14 @@ if [ ! -f "$CONFIG_DIR/realmd.conf" ] && [ -f "$CONFIG_DIR/realmd.conf.dist" ]; 
   echo "Note: found realmd.conf.dist in ${CONFIG_DIR} but will NOT copy it to realmd.conf; mount your own realmd.conf if needed" >&2
 fi
 
+# If the selected config dir doesn't contain any real conf files, but the image contains defaults, fall back to the image defaults
+if [ ! -f "${CONFIG_DIR}/mangosd.conf" ] && [ ! -f "${CONFIG_DIR}/realmd.conf" ]; then
+  if [ -f "/opt/mangos/etc/mangosd.conf" ] || [ -f "/opt/mangos/etc/realmd.conf" ]; then
+    echo "Note: ${CONFIG_DIR} does not contain mangosd.conf or realmd.conf; falling back to /opt/mangos/etc (image defaults)" >&2
+    CONFIG_DIR="/opt/mangos/etc"
+  fi
+fi
+
 echo "Using config dir: ${CONFIG_DIR}"
 
 # Helper to replace or append a DB info line
