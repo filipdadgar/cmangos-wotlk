@@ -1,29 +1,42 @@
-FROM ubuntu:20.04 AS builder
-RUN apt-get update -y && apt-get upgrade -y
+FROM ubuntu:24.04 AS builder
 
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-	build-essential \ 
-	git \
-	cmake \
-	libtbb-dev \
-	openssl \
-	libssl-dev \
-	libace-dev \
-	p7zip-full \ 
-	zlib1g-dev \
-	libcurl4-openssl-dev \
-	libboost-all-dev \
-	libmariadbclient-dev \
-	libreadline-dev \
-	libncurses-dev \
-	libbz2-dev \
-	ccache \
-	wget
+ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN ln -s /usr/bin/ccache /usr/local/bin/gcc \ 
-	&& ln -s /usr/bin/ccache /usr/local/bin/g++ \
-	&& ln -s /usr/bin/ccache /usr/local/bin/cc \
-        && ln -s /usr/bin/ccache /usr/local/bin/c++
+ARG TIMEZONE="Etc/UTC"
+ENV TZ="${TIMEZONE}"
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    \
+    apt-get update \
+ && apt-get install -y --no-install-recommends \
+        tzdata \
+ && ln -snf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime \
+ && echo "${TIMEZONE}" > /etc/timezone \
+ && dpkg-reconfigure --frontend noninteractive tzdata \
+ \
+ && apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        cmake \
+        g++-14 \
+        git-core \
+        libboost-filesystem-dev \
+        libboost-program-options-dev \
+        libboost-regex-dev \
+        libboost-serialization-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libmariadb-dev-compat \
+        libssl-dev \
+        mariadb-client \
+ \
+ && update-alternatives --install /usr/bin/gcc gcc \
+                                  /usr/bin/gcc-14 14 \
+                        --slave /usr/bin/g++ g++ \
+                                /usr/bin/g++-14 \
+ \
+ && rm -rf /tmp/*
+
 
 WORKDIR /cmangos
 RUN mkdir build run
