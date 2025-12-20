@@ -16,15 +16,11 @@ ALTER USER 'mangos'@'localhost' IDENTIFIED BY 'mangos';
 GRANT ALL PRIVILEGES ON wotlkrealmd.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON wotlkcharacters.* TO 'mangos'@'%';
 GRANT ALL PRIVILEGES ON wotlkmangos.* TO 'mangos'@'%';
-GRANT ALL PRIVILEGES ON logs.* TO 'mangos'@'%';
-GRANT ALL PRIVILEGES ON wotlklogs.* TO 'mangos'@'%';
-GRANT ALL PRIVILEGES ON realmd.* TO 'mangos'@'%';
+
 
 GRANT ALL PRIVILEGES ON wotlkrealmd.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON wotlkcharacters.* TO 'mangos'@'localhost';
 GRANT ALL PRIVILEGES ON wotlkmangos.* TO 'mangos'@'localhost';
-GRANT ALL PRIVILEGES ON logs.* TO 'mangos'@'localhost';
-GRANT ALL PRIVILEGES ON wotlklogs.* TO 'mangos'@'localhost';
-GRANT ALL PRIVILEGES ON realmd.* TO 'mangos'@'localhost';
+
 
 FLUSH PRIVILEGES;
