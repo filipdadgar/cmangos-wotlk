@@ -83,24 +83,24 @@ if [ -d "/opt/mangos/bin" ]; then
   done
 fi
 
-# # Wait for DB helper (pure bash using /dev/tcp)
-# wait_for_database() {
-#   local host="${DB_HOST}" port="${DB_PORT}" timeout="${DB_WAIT_TIMEOUT:-60}"
-#   local start
-#   start=$(date +%s)
-#   echo "Waiting for database ${host}:${port} (timeout ${timeout}s)..."
-#   while true; do
-#     if bash -c "cat < /dev/tcp/${host}/${port}" >/dev/null 2>&1; then
-#       echo "Database ${host}:${port} is reachable"
-#       break
-#     fi
-#     if [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
-#       echo "Timeout while waiting for database ${host}:${port}" >&2
-#       return 1
-#     fi
-#     sleep 1
-#   done
-# }
+# Wait for DB helper (pure bash using /dev/tcp)
+wait_for_database() {
+  local host="${DB_HOST}" port="${DB_PORT}" timeout="${DB_WAIT_TIMEOUT:-60}"
+  local start
+  start=$(date +%s)
+  echo "Waiting for database ${host}:${port} (timeout ${timeout}s)..."
+  while true; do
+    if bash -c "cat < /dev/tcp/${host}/${port}" >/dev/null 2>&1; then
+      echo "Database ${host}:${port} is reachable"
+      break
+    fi
+    if [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
+      echo "Timeout while waiting for database ${host}:${port}" >&2
+      return 1
+    fi
+    sleep 1
+  done
+}
 
 # Service runners
 run_mangosd() {
