@@ -43,7 +43,7 @@ RUN mkdir build run
 RUN git clone https://github.com/cmangos/mangos-wotlk.git mangos
 
 WORKDIR /cmangos/build
-RUN cmake -DDEBUG=0 -DBUILD_EXTRACTORS=ON -DBUILD_PLAYERBOT=ON -DCMAKE_INSTALL_PREFIX=../run ../mangos
+RUN cmake -DDEBUG=1 -DBUILD_EXTRACTORS=ON -DBUILD_PLAYERBOT=ON -DCMAKE_INSTALL_PREFIX=../run ../mangos
 RUN make -j`nproc`
 RUN make install
 WORKDIR /cmangos
