@@ -50,17 +50,18 @@ WORKDIR /cmangos
 RUN mv run/etc/mangosd.conf.dist run/etc/mangosd.conf || true
 RUN mv run/etc/realmd.conf.dist run/etc/realmd.conf || true
 
-FROM ubuntu:24.04
-RUN apt-get update && apt-get upgrade -y 
+# Clean up build artifacts and source code in builder stage
+RUN rm -rf /cmangos/build /cmangos/mangos /tmp/*
 
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+FROM ubuntu:24.04
+RUN apt-get update && apt-get upgrade -y && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         libssl3 \
-        libssl-dev \
-	wget \
-	mariadb-client \
-	libmariadb-dev \
-	screen \
-	git
+        wget \
+        mariadb-client \
+        libmariadb-dev \
+        screen && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENV HOME_DIR="/home/mangos"
 ENV MANGOS_DIR="/opt/mangos"
